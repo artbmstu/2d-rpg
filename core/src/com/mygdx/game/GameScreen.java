@@ -25,7 +25,7 @@ public class GameScreen implements Screen {
     private PowerUpsEmitter powerUpsEmitter;
     private BulletEmitter bulletEmitter;
     private int counter;
-    private Sound soundTakeMoney;
+    private Sound soundTakeCoin;
     private ShapeRenderer shapeRenderer;
     private Monster monster;
     private final static boolean DEBUG_MODE = true;
@@ -56,7 +56,7 @@ public class GameScreen implements Screen {
 
             trashes[i].prepare();
         }
-//        soundTakeMoney = Gdx.audio.newSound(Gdx.files.internal("takeMoney.wav"));
+        soundTakeCoin = Gdx.audio.newSound(Gdx.files.internal("takeCoin.wav"));
         powerUpsEmitter = new PowerUpsEmitter(atlas.findRegion("money"));
         bulletEmitter = new BulletEmitter(atlas.findRegion("bullet48"), 100);
         if (DEBUG_MODE) {
@@ -124,9 +124,9 @@ public class GameScreen implements Screen {
         for (int i = 0; i < powerUpsEmitter.getPowerUps().length; i++) {
             PowerUp p = powerUpsEmitter.getPowerUps()[i];
             if (p.isActive() && hero.getHitArea().contains(p.getPosition())) {
+                soundTakeCoin.play();
                 p.use(hero);
                 p.deactivate();
-//                soundTakeMoney.play();
             }
         }
         for (int i = 0; i < bulletEmitter.getActiveList().size(); i++) {

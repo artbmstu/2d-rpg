@@ -54,7 +54,6 @@ public class BaseUnit {
     public void update(float dt) {
         velocity.add(0, -600.0f * dt);
         tempPosition.set(position);
-        tempPosition.add(width / 2, height / 2);
         velocity.x *= 0.6f;
         float len = velocity.len() * dt;
         float dx = velocity.x * dt / len;
@@ -80,9 +79,8 @@ public class BaseUnit {
                 animationTime += dt * 50.0f;
             }
         }
-        tempPosition.add(-width / 2, -height / 2);
         position.set(tempPosition);
-        hitArea.setPosition(position.x + 50, position.y + 50);
+        hitArea.setPosition(position.x + width / 2, position.y + height / 2);
     }
 
     public void moveLeft(){
@@ -110,7 +108,7 @@ public class BaseUnit {
     }
     public void jump(){
         tempPosition.set(position).add(0, 1);
-        if (Math.abs(velocity.y) < 1.0f && checkCollision(tempPosition)) {
+        if (Math.abs(velocity.y) < 1.0f) {
             velocity.y = 400.0f;
         }
     }
@@ -119,8 +117,17 @@ public class BaseUnit {
     }
 
     public boolean checkCollision(Vector2 pos) {
-        for (float i = 0; i < 6.28f; i += 0.1f) {
-            if (!map.checkSpaceIsEmpty(pos.x + hitArea.radius * (float) Math.cos(i), pos.y + hitArea.radius * (float) Math.sin(i))) {
+        for (int i = 0; i <= 5; i++) {
+            if (!map.checkSpaceIsEmpty(pos.x + 25 + i * 10, pos.y)){
+                return true;
+            }
+            if (!map.checkSpaceIsEmpty(pos.x + 25 + i * 10, pos.y + 90)){
+                return true;
+            }
+            if (!map.checkSpaceIsEmpty(pos.x + 25, pos.y + i * 18 )){
+                return true;
+            }
+            if (!map.checkSpaceIsEmpty(pos.x + 75, pos.y + i * 18)){
                 return true;
             }
         }

@@ -35,7 +35,6 @@ public class Monster extends BaseUnit{
                 jump();
             }
         }
-        //Change
     }
 
     @Override
