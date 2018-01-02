@@ -1,5 +1,6 @@
 package com.mygdx.game;
 
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
@@ -28,8 +29,8 @@ public class BulletEmitter extends ObjectPool<Bullet> {
         }
     }
 
-    public void setup(boolean isPlayersBullet, float x, float y, float vx, float vy) {
+    public void setup(boolean isPlayersBullet, float x, float y, float vx, float vy, Sound shoot) {
         Bullet b = getActiveElement();
-        b.activate(isPlayersBullet, x, y, vx, vy);
+        b.activate(isPlayersBullet, x, y, vx, vy, shoot);
     }
 }

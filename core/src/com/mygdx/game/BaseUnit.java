@@ -97,14 +97,14 @@ public class BaseUnit {
             float bulletVelX = 600.0f;
             if (!right) bulletVelX *= -1;
             firePressTimer -= timeBetweenFire;
-            if (right) gameScreen.getBulletEmitter().setup(isPlayer, position.x + width / 2 + 35, position.y + height / 2, bulletVelX, 0);
-            else gameScreen.getBulletEmitter().setup(isPlayer, position.x + width / 2 - 35, position.y + height / 2, bulletVelX, 0);
+            if (right) gameScreen.getBulletEmitter().setup(isPlayer, position.x + width / 2 + 35, position.y + height / 2, bulletVelX, 0, gameScreen.getShoot());
+            else gameScreen.getBulletEmitter().setup(isPlayer, position.x + width / 2 - 35, position.y + height / 2, bulletVelX, 0, gameScreen.getShoot());
         }
     }
     public void instantFire(float dt, boolean isPlayer){
         float bulletVelX = 600.0f;
         if (!right) bulletVelX *= -1;
-        gameScreen.getBulletEmitter().setup(isPlayer, position.x + width / 2, position.y + height / 2, bulletVelX, 0);
+        gameScreen.getBulletEmitter().setup(isPlayer, position.x + width / 2, position.y + height / 2, bulletVelX, 0, gameScreen.getShoot());
     }
     public void jump(){
         tempPosition.set(position).add(0, 1);

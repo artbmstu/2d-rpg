@@ -25,7 +25,7 @@ public class GameScreen implements Screen {
     private PowerUpsEmitter powerUpsEmitter;
     private BulletEmitter bulletEmitter;
     private int counter;
-    private Sound soundTakeCoin;
+    private Sound soundTakeCoin, shoot;
     private ShapeRenderer shapeRenderer;
     private Monster monster;
     private final static boolean DEBUG_MODE = true;
@@ -36,6 +36,10 @@ public class GameScreen implements Screen {
 
     public Hero getHero() {
         return hero;
+    }
+
+    public Sound getShoot() {
+        return shoot;
     }
 
     public BulletEmitter getBulletEmitter() {
@@ -57,6 +61,7 @@ public class GameScreen implements Screen {
             trashes[i].prepare();
         }
         soundTakeCoin = Gdx.audio.newSound(Gdx.files.internal("takeCoin.wav"));
+        shoot = Gdx.audio.newSound(Gdx.files.internal("shoot.wav"));
         powerUpsEmitter = new PowerUpsEmitter(atlas.findRegion("money"));
         bulletEmitter = new BulletEmitter(atlas.findRegion("bullet48"), 100);
         if (DEBUG_MODE) {
@@ -99,7 +104,7 @@ public class GameScreen implements Screen {
         batch.end();
         if (DEBUG_MODE) {
             shapeRenderer.begin();
-            shapeRenderer.circle(hero.getHitArea().x, hero.getHitArea().y, hero.getHitArea().radius);
+            shapeRenderer.rect(hero.getPosition().x + 25, hero.getPosition().y, 50, 90);
             shapeRenderer.end();
         }
     }
@@ -137,7 +142,7 @@ public class GameScreen implements Screen {
         bulletEmitter.checkPool();
         for (int i = 0; i < bulletEmitter.getActiveList().size(); i++) {
             if (monster.hitArea.contains(bulletEmitter.getActiveList().get(i).getPosition())){
-                monster.takeDamage(5);
+                monster.takeDamage(10);
                 bulletEmitter.getActiveList().get(i).deactivate();
             }
         }

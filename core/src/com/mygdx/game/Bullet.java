@@ -1,5 +1,6 @@
 package com.mygdx.game;
 
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.math.Vector2;
 
 public class Bullet implements Poolable {
@@ -30,8 +31,9 @@ public class Bullet implements Poolable {
         this.active = false;
     }
 
-    public void activate(boolean isPlayersBullet, float x, float y, float vx, float vy) {
+    public void activate(boolean isPlayersBullet, float x, float y, float vx, float vy, Sound shoot) {
         this.isPlayersBullet = isPlayersBullet;
+        shoot.play();
         position.set(x, y);
         velocity.set(vx, vy);
         active = true;
