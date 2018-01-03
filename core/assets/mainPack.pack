@@ -1,7 +1,7 @@
 
 texturePack1.png
 format: RGBA8888
-filter: Linear,Linear
+filter: Nearest,Nearest
 repeat: none
 runner
   rotate: false
@@ -34,8 +34,8 @@ ground
 money
   rotate: false
   xy: 712, 2
-  size: 96, 32
-  orig: 96, 32
+  size: 128, 32
+  orig: 128, 32
   offset: 0, 0
   index: -1
 star16

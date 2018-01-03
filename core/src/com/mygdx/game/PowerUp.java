@@ -5,7 +5,7 @@ import sun.dc.pr.PRError;
 
 public class PowerUp {
     public enum Type {
-        MONEY_10(0), MONEY_25(1), MONEY_50(2);
+        MONEY_10(0), MONEY_25(1), MONEY_50(2), MEDKIT(3);
 
         private int imagePosition;
 
@@ -75,6 +75,9 @@ public class PowerUp {
                 break;
             case MONEY_50:
                 hero.addCoins(50);
+                break;
+            case MEDKIT:
+                hero.addCoins(20);
                 break;
         }
     }
