@@ -59,6 +59,10 @@ public class Map {
         }
     }
 
+    public char[][] getData() {
+        return data;
+    }
+
     public void fillGroundPart(int x1, int x2, int height) {
         if (x2 > 31) x2 = 31;
         for (int i = x1; i <= x2; i++) {

@@ -112,7 +112,15 @@ public class GameScreen implements Screen {
     public void update(float dt) {
         counter++;
         if (counter % 50 == 0) {
-            powerUpsEmitter.tryToCreatePowerUp(MathUtils.random(0, 1280), MathUtils.random(200, 250), 1.0f);
+            int randomPowerUpsX = MathUtils.random(0, 31);
+            int randomPowerUpsY = 0;
+            for (int i = 0; i < 18; i++) {
+                if (map.getData()[randomPowerUpsX][i] != 'g'){
+                    randomPowerUpsY = i + 2;
+                    break;
+                }
+            }
+            powerUpsEmitter.tryToCreatePowerUp(randomPowerUpsX * 40 + 20, randomPowerUpsY * 40 + 20, 1.0f);
         }
         map.update(dt);
         hero.update(dt);
