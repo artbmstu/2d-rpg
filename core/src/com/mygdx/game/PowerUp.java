@@ -5,7 +5,7 @@ import sun.dc.pr.PRError;
 
 public class PowerUp {
     public enum Type {
-        MONEY_10(0), MONEY_25(1), MONEY_50(2); //, MONEY_100, MEDKIT;
+        MONEY_10(0), MONEY_25(1), MONEY_50(2);
 
         private int imagePosition;
 
