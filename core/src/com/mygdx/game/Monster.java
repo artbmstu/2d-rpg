@@ -4,10 +4,12 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.MathUtils;
 
 public class Monster extends BaseUnit{
     private float x;
     private float y;
+    private boolean isActive;
 
     public Monster(GameScreen gameScreen, Map map, TextureRegion original, float x, float y) {
         super(gameScreen, map, original, 100, 120.0f,1.0f, 35, x, y, 100, 100);
