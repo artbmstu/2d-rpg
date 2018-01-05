@@ -17,10 +17,14 @@ public class Monster extends BaseUnit{
         this.y = y;
     }
 
-    @Override
-    public void update(float dt) {
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void update(float dt, boolean isActive) {
+        this.isActive = isActive;
         if (hp == 0){
-            restartMonster();
+            this.restart();
         }
         fire(dt, false);
         if (Math.abs(gameScreen.getHero().getPosition().x - position.x) > 100.0f) {
@@ -45,11 +49,12 @@ public class Monster extends BaseUnit{
         super.render(batch);
         batch.setColor(Color.WHITE);
     }
-    public void renderGUI(SpriteBatch batch, BitmapFont font) {
-        font.draw(batch, "Monster HP: " + hp + " / " + maxHp, 20, 650);
+    public void renderGUI(SpriteBatch batch, BitmapFont font, int hpPos) {
+        font.draw(batch, "Monster HP: " + hp + " / " + maxHp, 20, 650 - hpPos);
     }
-    public void restartMonster(){
-        position.set(x, y);
+    public void restart(){
+        this.isActive = false;
         hp = 100;
+        position.set(x, y);
     }
 }
