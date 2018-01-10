@@ -77,7 +77,7 @@ public class PowerUp {
                 hero.addCoins(50);
                 break;
             case MEDKIT:
-                hero.addCoins(20);
+                hero.hp += 100;
                 break;
         }
     }

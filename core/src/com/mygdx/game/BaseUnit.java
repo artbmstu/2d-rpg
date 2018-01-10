@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Circle;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
 public class BaseUnit {
@@ -13,33 +14,33 @@ public class BaseUnit {
     protected Map map;
     protected TextureRegion[] regions;
     protected Vector2 position;
-    protected Vector2 tempPosition;
     protected Vector2 velocity;
     protected float animationTime;
     protected boolean right;
     protected int maxHp;
     protected int hp;
-    protected Circle hitArea;
+    protected Rectangle hitArea;
     protected int width;
     protected int height;
     protected float firePressTimer;
     protected float timeBetweenFire;
     protected float speed;
 
-    public Vector2 getPosition() {
-        return position;
+    public float getCenterX(){
+        return hitArea.x + hitArea.width / 2;
+    }
+    public float getCenterY(){
+        return hitArea.y + hitArea.height / 2;
     }
 
-    public Circle getHitArea() {
+    public Rectangle getHitArea() {
         return hitArea;
     }
 
     public BaseUnit(GameScreen gameScreen, Map map, TextureRegion original, int maxHp, float speed, float timeBetweenFire, float radius, float x, float y, int width, int height) {
         this.gameScreen = gameScreen;
         this.map = map;
-        this.position = new Vector2(x, y);
         this.velocity = new Vector2(0, 0);
-        this.tempPosition = new Vector2(0, 0);
         this.width = width;
         this.height = height;
         this.regions = new TextureRegion(original).split(width, height)[0];
@@ -47,40 +48,35 @@ public class BaseUnit {
         this.maxHp = maxHp;
         this.speed = speed;
         this.hp = this.maxHp;
-        this.hitArea = new Circle(position, radius);
+        this.hitArea = new Rectangle(x, y, width / 3, height / 3 * 2);
         this.timeBetweenFire = timeBetweenFire;
     }
 
     public void update(float dt) {
         velocity.add(0, -600.0f * dt);
-        tempPosition.set(position);
         velocity.x *= 0.6f;
         float len = velocity.len() * dt;
         float dx = velocity.x * dt / len;
         float dy = velocity.y * dt / len;
         for (int i = 0; i < len; i++) {
-            tempPosition.y += dy;
-            if (checkCollision(tempPosition)) {
-                tempPosition.y -= dy;
+            hitArea.y += dy;
+            if (checkCollision()) {
+                hitArea.y -= dy;
                 velocity.y = 0.0f;
             }
-            tempPosition.x += dx;
-            if (checkCollision(tempPosition)) {
-                tempPosition.x -= dx;
+            hitArea.x += dx;
+            if (checkCollision()) {
+                hitArea.x -= dx;
                 velocity.x = 0.0f;
             }
         }
         if (Math.abs(velocity.x) > 1.0f) {
             if (Math.abs(velocity.y) < 1.0f) {
-                animationTime += (Math.abs(velocity.x) / 1800.0f);
+                animationTime += (Math.abs(velocity.x) / 800.0f);
             }
         } else {
-            if (getCurrentFrame() > 0) {
-                animationTime += dt * 50.0f;
-            }
+            animationTime = 0;
         }
-        position.set(tempPosition);
-        hitArea.setPosition(position.x + width / 2, position.y + height / 2);
     }
 
     public void moveLeft(){
@@ -94,41 +90,39 @@ public class BaseUnit {
     public void fire(float dt, boolean isPlayer){
         firePressTimer += dt;
         if (firePressTimer > timeBetweenFire) {
+            firePressTimer -= timeBetweenFire;
             float bulletVelX = 600.0f;
             if (!right) bulletVelX *= -1;
-            firePressTimer -= timeBetweenFire;
-            if (right) gameScreen.getBulletEmitter().setup(isPlayer, position.x + width / 2 + 35, position.y + height / 2, bulletVelX, 0, gameScreen.getShoot());
-            else gameScreen.getBulletEmitter().setup(isPlayer, position.x + width / 2 - 35, position.y + height / 2, bulletVelX, 0, gameScreen.getShoot());
+            if (right) {
+                gameScreen.getBulletEmitter().setup(isPlayer, getCenterX() + 17, getCenterY(), bulletVelX, 0, gameScreen.getShoot());
+            } else gameScreen.getBulletEmitter().setup(isPlayer, getCenterX() - 17, getCenterY(), bulletVelX, 0, gameScreen.getShoot());
         }
     }
     public void instantFire(float dt, boolean isPlayer){
         float bulletVelX = 600.0f;
         if (!right) bulletVelX *= -1;
-        if (right) gameScreen.getBulletEmitter().setup(isPlayer, position.x + width / 2 + 35, position.y + height / 2, bulletVelX, 0, gameScreen.getShoot());
-        else gameScreen.getBulletEmitter().setup(isPlayer, position.x + width / 2 - 35, position.y + height / 2, bulletVelX, 0, gameScreen.getShoot());
+        if (right) {
+            gameScreen.getBulletEmitter().setup(isPlayer, getCenterX() + 17, getCenterY(), bulletVelX, 0, gameScreen.getShoot());
+        } else gameScreen.getBulletEmitter().setup(isPlayer, getCenterX() - 17, getCenterY(), bulletVelX, 0, gameScreen.getShoot());
     }
     public void jump(){
-        tempPosition.set(position).add(0, 1);
-        if (Math.abs(velocity.y) < 1.0f) {
+        hitArea.y--;
+        if (Math.abs(velocity.y) < 1.0f && checkCollision()) {
             velocity.y = 400.0f;
         }
+        hitArea.y++;
     }
     public void takeDamage(int dmg) {
         hp -= dmg;
     }
 
-    public boolean checkCollision(Vector2 pos) {
-        for (int i = 0; i <= 5; i++) {
-            if (!map.checkSpaceIsEmpty(pos.x + 25 + i * 10, pos.y)){
-                return true;
-            }
-            if (!map.checkSpaceIsEmpty(pos.x + 25 + i * 10, pos.y + 90)){
-                return true;
-            }
-            if (!map.checkSpaceIsEmpty(pos.x + 25, pos.y + i * 18 )){
-                return true;
-            }
-            if (!map.checkSpaceIsEmpty(pos.x + 75, pos.y + i * 18)){
+    public boolean checkCollision() {
+        final int parts = 4;
+        float dx = hitArea.width / parts;
+        float dy = hitArea.height / parts;
+        for (int i = 0; i <= parts; i++) {
+            if (!map.checkSpaceIsEmpty(hitArea.x + i * dx, hitArea.y) || !map.checkSpaceIsEmpty(hitArea.x + i * dx, hitArea.y + hitArea.height)
+                    || !map.checkSpaceIsEmpty(hitArea.x, hitArea.y + i * dy) || !map.checkSpaceIsEmpty(hitArea.x +  hitArea.width, hitArea.y + i * dy)) {
                 return true;
             }
         }
@@ -143,7 +137,7 @@ public class BaseUnit {
         if (right && regions[frameIndex].isFlipX()) {
             regions[frameIndex].flip(true, false);
         }
-        batch.draw(regions[frameIndex], position.x, position.y, width/2, height/2, width, height, 1, 1, 0);
+        batch.draw(regions[frameIndex], hitArea.x - (width - hitArea.width) / 2, hitArea.y - (height - hitArea.height) / 2);
     }
 
     public int getCurrentFrame() {

@@ -5,17 +5,18 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
 public class Trash {
     private Vector2 position;
     private Vector2 velocity;
     private TextureRegion texture;
-    private Circle hitArea;
+    private Rectangle hitArea;
     private float scale;
     private float angle;
 
-    public Circle getHitArea() {
+    public Rectangle getHitArea() {
         return hitArea;
     }
 
@@ -23,7 +24,7 @@ public class Trash {
         this.texture = texture;
         this.position = new Vector2(0, 0);
         this.velocity = new Vector2(0, 0);
-        this.hitArea = new Circle(position, 28);
+        this.hitArea = new Rectangle(0, 0, 0, 0);
     }
 
     public void prepare() {
@@ -31,7 +32,8 @@ public class Trash {
         velocity.set(0, -500.0f);
         hitArea.setPosition(position);
         scale = MathUtils.random(0.6f, 1.5f);
-        hitArea.radius = 28 * scale;
+        hitArea.width = 28 * scale;
+        hitArea.height = 28 * scale;
         angle = MathUtils.random(0, 360);
     }
 
@@ -45,5 +47,7 @@ public class Trash {
             prepare();
         }
         hitArea.setPosition(position);
+        hitArea.x += 2 * scale;
+        hitArea.y += 2 * scale;
     }
 }

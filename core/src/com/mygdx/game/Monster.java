@@ -27,16 +27,16 @@ public class Monster extends BaseUnit{
             this.restart();
         }
         fire(dt, false);
-        if (Math.abs(gameScreen.getHero().getPosition().x - position.x) > 100.0f) {
-            if (gameScreen.getHero().getPosition().x < position.x) {
+        if (Math.abs(gameScreen.getHero().getHitArea().x - hitArea.x) > 100.0f) {
+            if (gameScreen.getHero().getHitArea().x < hitArea.x) {
                 moveLeft();
             }
-            if (gameScreen.getHero().getPosition().x > position.x) {
+            if (gameScreen.getHero().getHitArea().x > hitArea.x) {
                 moveRight();
             }
         }
         super.update(dt);
-        if (Math.abs(gameScreen.getHero().getPosition().x - position.x) > 100.0f) {
+        if (Math.abs(gameScreen.getHero().getHitArea().x - hitArea.x) > 100.0f) {
             if (Math.abs(velocity.x) < 0.1f) {
                 jump();
             }
@@ -55,6 +55,6 @@ public class Monster extends BaseUnit{
     public void restart(){
         this.isActive = false;
         hp = 100;
-        position.set(x, y);
+        hitArea.set(x, y, width / 3, height / 3 * 2);
     }
 }
